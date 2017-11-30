@@ -1,0 +1,2 @@
+debian/bin/CannabisCoind usr/bin
+src/CannabisCoind usr/lib/CannabisCoin

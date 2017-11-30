@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# PROVIDE: CannabisCoin
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# CannabisCoin_enable (bool): Set to NO by default. Set this variable to YES if you want to enable CannabisCoin service.
+# CannabisCoin_config (path): Set to /usr/local/etc/CannabisCoin.conf by default.
+# CannabisCoin_user:  The user account CannabisCoin daemon runs as. It uses 'root' user by default.
+# CannabisCoin_group: The group account CannabisCoin daemon runs as. It uses 'wheel' group by default.
+# CannabisCoin_datadir (str): Default to "/var/db/CannabisCoin". Base data directory.
+
+. /etc/rc.subr
+
+name=CannabisCoin
+rcvar=CannabisCoin_enable
+
+: ${CannabisCoin_enable:=NO}
+: ${CannabisCoin_config=/usr/local/etc/CannabisCoin.conf}
+: ${CannabisCoin_datadir=/var/db/CannabisCoin}
+: ${CannabisCoin_user="root"}
+: ${CannabisCoin_group="wheel"}
+
+required_files=${CannabisCoin_config}
+command=/usr/local/bin/CannabisCoind
+CannabisCoin_chdir=${CannabisCoin_datadir}
+pidfile="${CannabisCoin_datadir}/CannabisCoind.pid"
+stop_cmd=CannabisCoin_stop
+command_args="-conf=${CannabisCoin_config} -datadir=${CannabisCoin_datadir} -daemon -pid=${pidfile}"
+start_precmd="${name}_prestart"
+
+CannabisCoin_create_datadir()
+{
+	echo "Creating data directory"
+	eval mkdir -p ${CannabisCoin_datadir}
+	[ $? -eq 0 ] && chown -R ${CannabisCoin_user}:${CannabisCoin_group} ${CannabisCoin_datadir}
+}
+
+CannabisCoin_prestart()
+{
+	if [ ! -d "${CannabisCoin_datadir}/." ]; then
+		CannabisCoin_create_datadir || return 1
+	fi
+}
+
+CannabisCoin_requirepidfile()
+{
+	if [ ! "0`check_pidfile ${pidfile} ${command}`" -gt 1 ]; then
+		echo "${name} not running? (check $pidfile)."
+		exit 1
+	fi
+}
+
+CannabisCoin_stop()
+{
+    CannabisCoin_requirepidfile
+
+	echo "Stopping ${name}."
+	eval ${command} -conf=${CannabisCoin_config} -datadir=${CannabisCoin_datadir} stop
+	wait_for_pids ${rc_pid}
+}
+
+load_rc_config $name
+run_rc_command "$1"

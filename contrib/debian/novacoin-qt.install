@@ -1,0 +1,5 @@
+CannabisCoin-qt usr/bin
+share/pixmaps/CannabisCoin32.xpm usr/share/pixmaps
+share/pixmaps/CannabisCoin80.xpm usr/share/pixmaps
+debian/CannabisCoin-qt.desktop usr/share/applications
+debian/CannabisCoin-qt.protocol usr/share/kde4/services/

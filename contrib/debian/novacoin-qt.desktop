@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=CannabisCoin
+Comment=CannabisCoin P2P Cryptocurrency
+Comment[ru]=CannabisCoin, P2P криптовалюта
+Comment[fr]=CannabisCoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=CannabisCoin, eşten eşe kriptografik sanal para birimi
+Exec=/usr/bin/CannabisCoin-qt
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/CannabisCoin80.xpm
+MimeType=x-scheme-handler/CannabisCoin;
+Categories=Office;
